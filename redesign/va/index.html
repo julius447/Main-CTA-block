@@ -51,19 +51,34 @@ a{text-decoration:none;color:inherit}
   position:absolute;right:clamp(28px,4.5vw,72px);bottom:clamp(28px,3.2vw,48px);
   width:44%;height:auto;z-index:0;pointer-events:none;
 }
-.mcta__text{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;gap:16px}
+.mcta__text{position:relative;z-index:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:16px}
 
 .mcta__h{
   margin:0;font-size:clamp(2.8rem,1.25vw + 2.4rem,4rem);font-weight:500;line-height:1.1;
   color:var(--midnight);letter-spacing:-.01em;
 }
 .mcta__h .grad{
+  color:var(--teal-bright); /* fallback om text-clip ej stöds */
   background:linear-gradient(90deg,var(--teal-bright) 15%,var(--blue) 85%);
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone; /* jämn gradient över radbrytning (Safari-söm) */
   font-weight:inherit;
 }
+/* resiliens: gradient-text får aldrig försvinna om bakgrundsgrafik nollas */
+@supports not ((-webkit-background-clip:text) or (background-clip:text)){
+  .mcta__h .grad{-webkit-text-fill-color:currentColor;background:none;color:var(--teal-bright)}
+}
+@media (forced-colors:active){
+  .mcta__h .grad{-webkit-text-fill-color:currentColor;background:none;color:CanvasText}
+}
+@media print{
+  .mcta__h .grad{-webkit-text-fill-color:currentColor;background:none;color:#090b32}
+}
+/* forcerad brytning ("...inom 60" / "sekunder!") ENDAST på bred desktop där
+   vänsterkolumnen rymmer rad 1 — under 1300px sköter naturlig brytning det
+   utan orphan (verifierat: 1120px ger rent 2-radigt "...inom" / "60 sekunder!") */
 .br-d{display:none}
-@media (min-width:1120px){.br-d{display:inline}}
+@media (min-width:1300px){.br-d{display:inline}}
 .mcta__p{
   margin:0;font-size:clamp(1.6rem,.21vw + 1.53rem,1.8rem);line-height:1.6;
   max-width:52ch;text-align:left;
@@ -140,18 +155,21 @@ a{text-decoration:none;color:inherit}
 @media (prefers-reduced-motion:reduce){
   .btn-ring__chip::after{animation:none}
   .btn-ring,.btn-ring:hover,.btn-radgivning,.btn-radgivning:hover{transition:none;transform:none}
-  .btn-radgivning .pil{transition:none}
+  .btn-radgivning .pil,.btn-radgivning:hover .pil{transition:none;transform:none}
 }
 .btn-ring svg,.btn-radgivning svg{flex:0 0 auto}
+/* optisk mikro-nudge: luren en gnutta ner-vänster i chipen */
+.btn-ring__chip svg{transform:translate(-1px,1px)}
 
 /* proof-raden — g-row-mönstret, optiskt linjerad:
    allt flex-centrerat på en 17px-axel, enhetlig 10px-rytm,
    stjärnraden knuten till labelns versalhöjd */
 .g-row{
-  display:inline-flex;align-items:center;gap:10px;
-  min-height:44px;padding:6px 0;margin-top:0;
+  display:inline-flex;align-items:center;flex-wrap:wrap;gap:10px;
+  min-height:44px;padding:6px 0;
   font-size:1.5rem;font-weight:400;color:var(--midnight);line-height:1;
 }
+.g-row:focus-visible{outline:3px solid var(--teal);outline-offset:3px;border-radius:6px}
 .g-row .g-icon{display:block;flex:0 0 auto}
 .g-row .g-label{display:block;white-space:nowrap}
 .g-row strong{font-weight:700}
