@@ -51,16 +51,16 @@ a{text-decoration:none;color:inherit}
   position:absolute;right:clamp(28px,4.5vw,72px);bottom:clamp(28px,3.2vw,48px);
   width:44%;height:auto;z-index:0;pointer-events:none;
 }
-.mcta__text{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;gap:clamp(12px,1.4vw,18px)}
+.mcta__text{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;gap:16px}
 
 .mcta__h{
-  margin:0;font-size:clamp(2.8rem,1.25vw + 2.4rem,4rem);font-weight:500;line-height:1.12;
+  margin:0;font-size:clamp(2.8rem,1.25vw + 2.4rem,4rem);font-weight:500;line-height:1.1;
   color:var(--midnight);letter-spacing:-.01em;
 }
 .mcta__h .grad{
   background:linear-gradient(90deg,var(--teal-bright) 15%,var(--blue) 85%);
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-  font-weight:600;
+  font-weight:inherit;
 }
 .br-d{display:none}
 @media (min-width:1120px){.br-d{display:inline}}
@@ -69,25 +69,63 @@ a{text-decoration:none;color:inherit}
   max-width:52ch;text-align:left;
 }
 
-.mcta__cta{display:flex;margin-top:6px}
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:12px;
-  min-height:52px;padding:14px 28px;border-radius:var(--radius-m);
-  font-size:clamp(1.5rem,.2vw + 1.45rem,1.7rem);font-weight:600;line-height:1;white-space:nowrap;
-  background:var(--teal);color:#fff;
-  box-shadow:0 6px 18px -4px rgba(0,169,145,.45);
-  transition:transform .15s ease, box-shadow .15s ease, background-color .15s ease;
+/* ============ RING-CTA — den blå ============
+   Ultimat samtalsknapp: brand-blå gradienten (#b6f2ff→#5eb1bf,
+   samma par som den kanoniska telefonknappen), midnight-text för
+   maximal kontrast, ikonen i en vit chip med lugn puls-ring
+   ("linjen är öppen"), gloss-highlight + blålagrad skugga. */
+.mcta__cta{display:flex;margin-top:8px}
+.btn-ring{
+  display:inline-flex;align-items:center;gap:14px;
+  min-height:58px;padding:11px 30px 11px 12px;border-radius:var(--radius-m);
+  font-size:1.6rem;font-weight:600;line-height:1;white-space:nowrap;
+  color:var(--midnight);
+  background:linear-gradient(120deg,#b6f2ff 0%,#5eb1bf 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.55),
+    0 2px 4px rgba(9,11,50,.06),
+    0 10px 26px -6px rgba(94,177,191,.55);
+  transition:transform .16s ease, box-shadow .16s ease, filter .16s ease;
 }
-.btn:hover{transform:translateY(-1px);background:hsl(171 100% 29%);box-shadow:0 10px 24px -4px rgba(0,169,145,.5)}
-.btn:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
-.btn svg{flex:0 0 auto}
+.btn-ring:hover{
+  transform:translateY(-1.5px);
+  filter:saturate(1.08) brightness(1.02);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.55),
+    0 3px 6px rgba(9,11,50,.07),
+    0 16px 34px -8px rgba(94,177,191,.65);
+}
+.btn-ring:active{transform:translateY(0);filter:saturate(1.05)}
+.btn-ring:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.btn-ring__chip{
+  position:relative;flex:0 0 auto;
+  width:36px;height:36px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.92);color:var(--midnight);
+  box-shadow:0 1px 3px rgba(9,11,50,.14);
+}
+.btn-ring__chip::after{
+  content:"";position:absolute;inset:0;border-radius:50%;
+  box-shadow:0 0 0 0 rgba(255,255,255,.65);
+  animation:mctaRing 2.8s cubic-bezier(.4,0,.4,1) infinite;
+}
+@keyframes mctaRing{
+  0%{box-shadow:0 0 0 0 rgba(255,255,255,.65)}
+  55%{box-shadow:0 0 0 9px rgba(255,255,255,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}
+}
+@media (prefers-reduced-motion:reduce){
+  .btn-ring__chip::after{animation:none}
+  .btn-ring,.btn-ring:hover{transition:none;transform:none}
+}
+.btn-ring svg{flex:0 0 auto}
 
 /* proof-raden — g-row-mönstret, optiskt linjerad:
    allt flex-centrerat på en 17px-axel, enhetlig 10px-rytm,
    stjärnraden knuten till labelns versalhöjd */
 .g-row{
   display:inline-flex;align-items:center;gap:10px;
-  min-height:44px;padding:6px 2px;margin-top:2px;
+  min-height:44px;padding:6px 0;margin-top:0;
   font-size:1.5rem;font-weight:400;color:var(--midnight);line-height:1;
 }
 .g-row .g-icon{display:block;flex:0 0 auto}
@@ -106,8 +144,10 @@ a{text-decoration:none;color:inherit}
   border-radius:var(--radius-l);overflow:hidden;
   min-height:366px;
 }
+/* croppen: fönstret täcker huvudtopp (~16 %) med luft ovanför NER TILL
+   ampy-loggan på tröjan (~86 %) — samma framing på alla enheter */
 .mcta__media .photo{
-  width:80%;height:auto;aspect-ratio:320/366;object-fit:cover;object-position:50% 12%;
+  width:80%;height:auto;aspect-ratio:320/385;object-fit:cover;object-position:50% 46%;
   border-radius:var(--radius-l);
 }
 .mcta__wave{
@@ -123,13 +163,13 @@ a{text-decoration:none;color:inherit}
   .mcta__card{grid-template-columns:1fr;gap:20px;padding:20px 20px 28px}
   .mcta__bgwave{display:none}
   .mcta__media{order:-1;align-self:auto;justify-content:center;min-height:0}
-  .mcta__media .photo{width:100%;aspect-ratio:1/1.05;object-position:50% 18%}
+  .mcta__media .photo{width:100%;aspect-ratio:320/385;object-position:50% 46%}
   .mcta__wave{width:60%}
   .mcta__text{align-items:center}
   .mcta__h{text-align:center;font-size:clamp(2.4rem,5.5vw,3rem);line-height:1.16}
   .mcta__p{text-align:center}
   .mcta__cta{width:100%}
-  .btn{width:100%}
+  .btn-ring{width:100%;justify-content:center;padding:11px 18px}
   .g-row{align-self:center}
 }
 @media (max-width:360px){
@@ -147,8 +187,10 @@ a{text-decoration:none;color:inherit}
       <h2 class="mcta__h">Prata med en elektriker <span class="grad">inom 60<br class="br-d"> sekunder!</span></h2>
       <p class="mcta__p">Känn dig trygg med kunnig hjälp, precis när du behöver den. Prata direkt med en erfaren elektriker som lyssnar på ditt behov och guidar dig till en säker, smidig lösning.</p>
       <div class="mcta__cta">
-        <a class="btn" href="tel:+46102657979">
-          <svg width="18" height="18" viewBox="0 0 19 20" fill="none" aria-hidden="true"><path d="M11.9 4.2c.8.2 1.5.6 2 1.1.6.6 1 1.3 1.1 2.1M11.9.8c1.6.2 3.1 1 4.2 2.2 1.2 1.2 1.9 2.7 2.1 4.4M17.4 14.1v2.5c0 .5-.2.9-.5 1.2-.3.3-.8.5-1.2.4-2.4-.3-4.8-1.2-6.8-2.6-1.9-1.3-3.5-3-4.8-5-1.3-2.2-2.2-4.6-2.4-7.2 0-.5.1-.9.4-1.2.3-.3.7-.5 1.2-.5h2.4c.8 0 1.5.6 1.6 1.4.1.8.3 1.6.6 2.3.2.6.1 1.3-.4 1.8l-1 1c1.1 2.1 2.8 3.8 4.7 5l1-1c.5-.5 1.2-.6 1.8-.4.7.3 1.5.5 2.3.6.8.1 1.4.8 1.4 1.7Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <a class="btn-ring" href="tel:+46102657979">
+          <span class="btn-ring__chip" aria-hidden="true">
+            <svg width="17" height="17" viewBox="0 0 19 20" fill="none"><path d="M11.9 4.2c.8.2 1.5.6 2 1.1.6.6 1 1.3 1.1 2.1M11.9.8c1.6.2 3.1 1 4.2 2.2 1.2 1.2 1.9 2.7 2.1 4.4M17.4 14.1v2.5c0 .5-.2.9-.5 1.2-.3.3-.8.5-1.2.4-2.4-.3-4.8-1.2-6.8-2.6-1.9-1.3-3.5-3-4.8-5-1.3-2.2-2.2-4.6-2.4-7.2 0-.5.1-.9.4-1.2.3-.3.7-.5 1.2-.5h2.4c.8 0 1.5.6 1.6 1.4.1.8.3 1.6.6 2.3.2.6.1 1.3-.4 1.8l-1 1c1.1 2.1 2.8 3.8 4.7 5l1-1c.5-.5 1.2-.6 1.8-.4.7.3 1.5.5 2.3.6.8.1 1.4.8 1.4 1.7Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
           Ring 010-265 79 79
         </a>
       </div>
