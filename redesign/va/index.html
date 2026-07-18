@@ -69,23 +69,26 @@ a{text-decoration:none;color:inherit}
   max-width:52ch;text-align:left;
 }
 
-/* ============ RING-CTA — den blå ============
-   Ultimat samtalsknapp: brand-blå gradienten (#b6f2ff→#5eb1bf,
-   samma par som den kanoniska telefonknappen), midnight-text för
-   maximal kontrast, ikonen i en vit chip med lugn puls-ring
-   ("linjen är öppen"), gloss-highlight + blålagrad skugga. */
-.mcta__cta{display:flex;margin-top:8px}
+/* ============ CTA-PARET ============
+   Ring (blå, primär) + Kostnadsfri rådgivning (grön, kanoniska
+   cta-primary-gradienten). Enhetligt skelett: samma höjd, radius,
+   typografi (mjukad 500, mjuk navy) och skugg-språk — text vänster /
+   ikon höger på mobil (som live-blocket), chip-vänster på desktop. */
+.mcta__cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:8px}
+.btn-ring,.btn-radgivning{
+  display:inline-flex;align-items:center;
+  min-height:58px;border-radius:var(--radius-m);
+  font-size:1.6rem;font-weight:500;line-height:1;white-space:nowrap;
+  color:hsl(237 35% 24%);
+  transition:transform .16s ease, box-shadow .16s ease, filter .16s ease;
+}
 .btn-ring{
-  display:inline-flex;align-items:center;gap:14px;
-  min-height:58px;padding:11px 30px 11px 12px;border-radius:var(--radius-m);
-  font-size:1.6rem;font-weight:600;line-height:1;white-space:nowrap;
-  color:var(--midnight);
+  gap:14px;padding:11px 30px 11px 12px;
   background:linear-gradient(120deg,#b6f2ff 0%,#5eb1bf 100%);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.55),
     0 2px 4px rgba(9,11,50,.06),
     0 10px 26px -6px rgba(94,177,191,.55);
-  transition:transform .16s ease, box-shadow .16s ease, filter .16s ease;
 }
 .btn-ring:hover{
   transform:translateY(-1.5px);
@@ -101,7 +104,7 @@ a{text-decoration:none;color:inherit}
   position:relative;flex:0 0 auto;
   width:36px;height:36px;border-radius:50%;
   display:inline-flex;align-items:center;justify-content:center;
-  background:rgba(255,255,255,.92);color:var(--midnight);
+  background:rgba(255,255,255,.92);color:hsl(237 35% 24%);
   box-shadow:0 1px 3px rgba(9,11,50,.14);
 }
 .btn-ring__chip::after{
@@ -114,11 +117,32 @@ a{text-decoration:none;color:inherit}
   55%{box-shadow:0 0 0 9px rgba(255,255,255,0)}
   100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}
 }
+.btn-radgivning{
+  gap:16px;padding:11px 24px;
+  background:linear-gradient(120deg,#55ff9a 0%,#5eb1bf 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.45),
+    0 2px 4px rgba(9,11,50,.06),
+    0 10px 26px -6px rgba(94,199,160,.45);
+}
+.btn-radgivning:hover{
+  transform:translateY(-1.5px);
+  filter:saturate(1.06) brightness(1.02);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.5),
+    0 3px 6px rgba(9,11,50,.07),
+    0 16px 34px -8px rgba(94,199,160,.55);
+}
+.btn-radgivning:active{transform:translateY(0)}
+.btn-radgivning:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
+.btn-radgivning .pil{transition:transform .16s ease}
+.btn-radgivning:hover .pil{transform:translate(2px,-2px)}
 @media (prefers-reduced-motion:reduce){
   .btn-ring__chip::after{animation:none}
-  .btn-ring,.btn-ring:hover{transition:none;transform:none}
+  .btn-ring,.btn-ring:hover,.btn-radgivning,.btn-radgivning:hover{transition:none;transform:none}
+  .btn-radgivning .pil{transition:none}
 }
-.btn-ring svg{flex:0 0 auto}
+.btn-ring svg,.btn-radgivning svg{flex:0 0 auto}
 
 /* proof-raden — g-row-mönstret, optiskt linjerad:
    allt flex-centrerat på en 17px-axel, enhetlig 10px-rytm,
@@ -168,8 +192,10 @@ a{text-decoration:none;color:inherit}
   .mcta__text{align-items:center}
   .mcta__h{text-align:center;font-size:clamp(2.4rem,5.5vw,3rem);line-height:1.16}
   .mcta__p{text-align:center}
-  .mcta__cta{width:100%}
-  .btn-ring{width:100%;justify-content:center;padding:11px 18px}
+  .mcta__cta{width:100%;flex-direction:column;gap:12px}
+  /* mobil: text vänster / ikon höger (live-blockets grammatik) */
+  .btn-ring{width:100%;flex-direction:row-reverse;justify-content:space-between;padding:11px 12px 11px 22px}
+  .btn-radgivning{width:100%;justify-content:space-between;padding:11px 22px}
   .g-row{align-self:center}
 }
 @media (max-width:360px){
@@ -192,6 +218,10 @@ a{text-decoration:none;color:inherit}
             <svg width="17" height="17" viewBox="0 0 19 20" fill="none"><path d="M11.9 4.2c.8.2 1.5.6 2 1.1.6.6 1 1.3 1.1 2.1M11.9.8c1.6.2 3.1 1 4.2 2.2 1.2 1.2 1.9 2.7 2.1 4.4M17.4 14.1v2.5c0 .5-.2.9-.5 1.2-.3.3-.8.5-1.2.4-2.4-.3-4.8-1.2-6.8-2.6-1.9-1.3-3.5-3-4.8-5-1.3-2.2-2.2-4.6-2.4-7.2 0-.5.1-.9.4-1.2.3-.3.7-.5 1.2-.5h2.4c.8 0 1.5.6 1.6 1.4.1.8.3 1.6.6 2.3.2.6.1 1.3-.4 1.8l-1 1c1.1 2.1 2.8 3.8 4.7 5l1-1c.5-.5 1.2-.6 1.8-.4.7.3 1.5.5 2.3.6.8.1 1.4.8 1.4 1.7Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </span>
           Ring 010-265 79 79
+        </a>
+        <a class="btn-radgivning" href="https://ampy.se/kontakt/">
+          Kostnadsfri rådgivning
+          <svg class="pil" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4.7 11.3 11.3 4.7M11.3 4.7H4.7M11.3 4.7v6.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
       </div>
       <a class="g-row" href="https://www.google.com/maps/place/Ampy/@59.3576299,17.9842061,17z/data=!3m1!4b1!4m6!3m5!1s0x2bec1ce5c4ed9ce9:0xfce1752e84a1bfee!8m2!3d59.3576272!4d17.986781!16s%2Fg%2F11ypjy9rrm" target="_blank" rel="noopener" aria-label="Ampys betyg: 5,0 av 5 på Google — läs recensionerna">
